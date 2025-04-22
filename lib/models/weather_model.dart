@@ -25,3 +25,15 @@ class WeatherModel {
     );
   }
 }
+
+class ForecastModel {
+  final DateTime date;
+  final String weatherMain;
+  final double temperature;
+
+  ForecastModel({
+    required this.date,
+    required this.weatherMain,
+    required this.temperature,
+  });
+}

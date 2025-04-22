@@ -7,7 +7,7 @@ class ApiCall {
     try {
       final res = await http.get(
         Uri.parse(
-          'https://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=$apikey',
+          'https://api.openweathermap.org/data/2.5/forecast?q=delhi,Ind&APPID=$apikey',
         ),
       );
 

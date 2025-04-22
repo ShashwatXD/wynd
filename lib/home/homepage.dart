@@ -1,6 +1,9 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wynd/widgets/loading.dart';
+import 'package:wynd/widgets/error_screen.dart';
+import 'package:wynd/widgets/weather_icon.dart';
 import 'package:wynd/providers/weather_api_provider.dart';
 
 class WeatherScreen extends StatelessWidget {
@@ -12,96 +15,26 @@ class WeatherScreen extends StatelessWidget {
           if (weatherProvider.weather == null &&
               weatherProvider.errorMessage == null) {
             weatherProvider.fetchWeather();
-            return _buildLoadingState();
+            return LoadingScreen();
           }
 
           if (weatherProvider.errorMessage != null) {
-            return _buildErrorState(weatherProvider.errorMessage!, context);
+            return ErrorScreen(
+              errorMessage: weatherProvider.errorMessage!,
+              onRetry: () {
+                weatherProvider.fetchWeather();
+              },
+            );
           }
 
           final weather = weatherProvider.weather!;
-          return _buildWeatherUI(context, weather, weatherProvider);
+          return _buildmainUI(context, weather, weatherProvider);
         },
       ),
     );
   }
 
-  Widget _buildLoadingState() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Colors.lightBlue[300]!, Colors.blue[700]!],
-        ),
-      ),
-      child: Center(child: CircularProgressIndicator.adaptive()),
-    );
-  }
-
-  Widget _buildErrorState(String error, BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Colors.grey[400]!, Colors.grey[700]!],
-        ),
-      ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline, color: Colors.red[300], size: 80),
-              SizedBox(height: 16),
-              Text(
-                "Oops! Something went wrong",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 12),
-              Text(
-                error,
-                style: TextStyle(color: Colors.white70, fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 32),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Provider.of<WeatherProvider>(
-                    context,
-                    listen: false,
-                  ).fetchWeather();
-                },
-                icon: Icon(Icons.refresh),
-                label: Text("Try Again"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[600],
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWeatherUI(
-    BuildContext context,
-    dynamic weather,
-    WeatherProvider weatherProvider,
-  ) {
+  Widget _buildmainUI(context, weather, weatherProvider) {
     List<Color> gradientColors = _getBackgroundColors(weather.weatherMain);
     final sunriseTime = DateFormat('h:mm a').format(weather.sunrise.toLocal());
     final sunsetTime = DateFormat('h:mm a').format(weather.sunset.toLocal());
@@ -123,7 +56,7 @@ class WeatherScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "London, UK",
+                    "New Delhi,India",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -139,13 +72,14 @@ class WeatherScreen extends StatelessWidget {
                 ],
               ),
             ),
+            Divider(color: Colors.blueGrey[600]!, height: 0),
             Expanded(
               child: ListView(
                 physics: BouncingScrollPhysics(),
                 children: [
-                  SizedBox(height: 40),
-                  _getWeatherIcon(weather.weatherMain),
-                  SizedBox(height: 24),
+                  SizedBox(height: 30),
+                  GetWeatherIcon(weatherCondition: weather.weatherMain),
+                  SizedBox(height: 19),
                   Center(
                     child: Text(
                       weather.weatherMain,
@@ -157,15 +91,25 @@ class WeatherScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 80),
+                  SizedBox(height: 40),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 24),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: const Color.fromARGB(
+                        255,
+                        1,
+                        0,
+                        0,
+                      ).withOpacity(0.4),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: const Color.fromARGB(
+                            255,
+                            254,
+                            254,
+                            254,
+                          ).withOpacity(0.2),
                           spreadRadius: 5,
                           blurRadius: 7,
                           offset: Offset(0, 3),
@@ -202,7 +146,12 @@ class WeatherScreen extends StatelessWidget {
                       icon: Icon(Icons.refresh),
                       label: Text("Update Weather"),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.3),
+                        backgroundColor: const Color.fromARGB(
+                          255,
+                          43,
+                          43,
+                          43,
+                        ).withOpacity(0.3),
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(
                           horizontal: 30,
@@ -228,12 +177,12 @@ class WeatherScreen extends StatelessWidget {
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, color: Colors.white, size: 28),
+        Icon(icon, color: Colors.white, size: 29),
         SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: TextStyle(color: Colors.white70, fontSize: 14)),
+            Text(label, style: TextStyle(color: Colors.white70, fontSize: 16)),
             SizedBox(height: 4),
             Text(
               value,
@@ -246,47 +195,6 @@ class WeatherScreen extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-
-  Widget _getWeatherIcon(String weatherCondition) {
-    double iconSize = 100;
-    IconData iconData;
-
-    switch (weatherCondition.toLowerCase()) {
-      case 'clear':
-        iconData = Icons.wb_sunny;
-        break;
-      case 'clouds':
-        iconData = Icons.cloud;
-        break;
-      case 'rain':
-        iconData = Icons.grain;
-        break;
-      case 'thunderstorm':
-        iconData = Icons.flash_on;
-        break;
-      case 'snow':
-        iconData = Icons.ac_unit;
-        break;
-      case 'mist':
-      case 'fog':
-        iconData = Icons.cloud_queue;
-        break;
-      default:
-        iconData = Icons.wb_sunny;
-    }
-
-    return Center(
-      child: Container(
-        width: iconSize + 40,
-        height: iconSize + 40,
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.2),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(iconData, color: Colors.white, size: iconSize),
-      ),
     );
   }
 

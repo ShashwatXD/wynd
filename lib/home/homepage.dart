@@ -9,7 +9,6 @@ class WeatherScreen extends StatelessWidget {
     return Scaffold(
       body: Consumer<WeatherProvider>(
         builder: (context, weatherProvider, child) {
-          // Call fetchWeather when the widget is built
           if (weatherProvider.weather == null &&
               weatherProvider.errorMessage == null) {
             weatherProvider.fetchWeather();
@@ -36,23 +35,7 @@ class WeatherScreen extends StatelessWidget {
           colors: [Colors.lightBlue[300]!, Colors.blue[700]!],
         ),
       ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
-            SizedBox(height: 20),
-            Text(
-              "Fetching Weather...",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
+      child: Center(child: CircularProgressIndicator.adaptive()),
     );
   }
 

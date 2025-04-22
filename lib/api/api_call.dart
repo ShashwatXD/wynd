@@ -13,7 +13,7 @@ class ApiCall {
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-        print(data);
+
         return data;
       } else {
         throw Exception(

@@ -11,6 +11,7 @@ class WeatherProvider with ChangeNotifier {
       final data = await ApiCall().getCurrentWeather();
 
       weather = WeatherModel.fromJson(data);
+      errorMessage = null;
       notifyListeners();
     } catch (e) {
       errorMessage = 'Error fetching weather: $e';

@@ -7,7 +7,7 @@ String getBackgroundImagePath({required String weatherCondition}) {
     case 'clouds':
       return 'assets/images/cloudy.jpg';
     case 'rain':
-      return 'assets/images/rainy.jpg';
+      return 'images/rain.jpg';
     case 'snow':
       return 'assets/images/snowy.jpg';
     case 'thunderstorm':

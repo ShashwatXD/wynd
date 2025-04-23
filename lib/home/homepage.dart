@@ -48,8 +48,9 @@ class WeatherScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Icon(Icons.location_on, size: 40, color: Colors.white),
+                  SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -81,23 +82,10 @@ class WeatherScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 6,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
-            Divider(color: Colors.white.withOpacity(0.3), thickness: 1),
+            Divider(color: Colors.white.withOpacity(0.3), thickness: 0),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {

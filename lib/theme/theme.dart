@@ -2,20 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wynd/providers/theme_provider.dart';
 
-BoxDecoration getWeatherBackgroundDecoration(BuildContext context) {
-  final themeProvider = Provider.of<ThemeProvider>(context);
-  final isDarkMode = themeProvider.isDarkMode;
-
-  final effectiveDarkMode = isDarkMode;
-
-  return BoxDecoration(
-    gradient: _getBackgroundGradient(effectiveDarkMode),
-    boxShadow: _getBackgroundShadows(effectiveDarkMode),
-    borderRadius: BorderRadius.circular(effectiveDarkMode ? 12 : 16),
+Divider getDivider(context) {
+  final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+  return Divider(
+    color:
+        isDarkMode
+            ? Colors.white.withOpacity(0.3)
+            : Colors.black.withOpacity(0.3),
+    thickness: 1,
+    height: 30,
   );
 }
 
-LinearGradient _getBackgroundGradient(bool isDarkMode) {
+BoxDecoration getWeatherBackgroundDecoration(context) {
+  final effectiveDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+
+  return BoxDecoration(
+    gradient: getBackgroundGradient(effectiveDarkMode),
+    boxShadow: getBackgroundShadows(effectiveDarkMode),
+    borderRadius: BorderRadius.circular(effectiveDarkMode ? 1 : 16),
+  );
+}
+
+LinearGradient getBackgroundGradient(bool isDarkMode) {
   return isDarkMode
       ? const LinearGradient(
         begin: Alignment.topLeft,
@@ -27,11 +36,15 @@ LinearGradient _getBackgroundGradient(bool isDarkMode) {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         stops: [0.0, 0.6, 1.0],
-        colors: [Color(0xFFE6F7FF), Color(0xFFB3E5FC), Color(0xFF81D4FA)],
+        colors: [
+          Color.fromARGB(255, 236, 249, 255),
+          Color.fromARGB(255, 164, 224, 251),
+          Color.fromARGB(255, 111, 205, 249),
+        ],
       );
 }
 
-List<BoxShadow>? _getBackgroundShadows(bool isDarkMode) {
+List<BoxShadow>? getBackgroundShadows(bool isDarkMode) {
   return isDarkMode
       ? [
         BoxShadow(
@@ -51,7 +64,7 @@ List<BoxShadow>? _getBackgroundShadows(bool isDarkMode) {
       ];
 }
 
-TextStyle getHeadingTextStyle(BuildContext context) {
+TextStyle getHeadingTextStyle(context) {
   final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
   return TextStyle(
     fontSize: 24,
@@ -76,15 +89,32 @@ TextStyle getHeadingTextStyle(BuildContext context) {
   );
 }
 
-TextStyle getBodyTextStyle(BuildContext context) {
+TextStyle getBodyTextStyle(context) {
   final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
   return TextStyle(
-    fontSize: 16,
-    color: isDarkMode ? Colors.white70 : Colors.black54,
+    fontSize: 17,
+    fontWeight: FontWeight.bold,
+    color: isDarkMode ? Colors.white : Colors.black87,
+    letterSpacing: 0.5,
+    height: 1.2,
+    shadows:
+        isDarkMode
+            ? [
+              Shadow(
+                offset: Offset(0, 2),
+                blurRadius: 3.0,
+                color: Colors.black.withOpacity(0.3),
+              ),
+            ]
+            : null,
+    decoration: TextDecoration.none,
+    decorationColor: isDarkMode ? Colors.white70 : Color(0xFF0F3460),
+    decorationThickness: 1.5,
+    fontFamily: 'Roboto',
   );
 }
 
-BoxDecoration getCardDecoration(BuildContext context) {
+BoxDecoration getCardDecoration(context) {
   final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
   return BoxDecoration(
     color: isDarkMode ? const Color(0xFF202040) : Colors.white,
@@ -103,41 +133,43 @@ BoxDecoration getCardDecoration(BuildContext context) {
   );
 }
 
-BoxDecoration getThemeAwareCardDecoration(BuildContext context) {
-  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+BoxDecoration getThemeAwareCardDecoration(context) {
+  final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+  final colorScheme = Theme.of(context).colorScheme;
 
   return BoxDecoration(
     borderRadius: BorderRadius.circular(16),
     gradient: LinearGradient(
-      colors: [
-        const Color.fromARGB(255, 9, 9, 9).withOpacity(0.25),
-        const Color.fromARGB(255, 0, 0, 0).withOpacity(0.15),
-      ],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
+      colors:
+          isDarkMode
+              ? [
+                colorScheme.surface.withOpacity(0.2),
+                colorScheme.surface.withOpacity(0.1),
+              ]
+              : [
+                colorScheme.surface.withOpacity(0.3),
+                colorScheme.surface.withOpacity(0.15),
+              ],
+    ),
+    border: Border.all(
+      color: colorScheme.onSurface.withOpacity(0.1),
+      width: 1.0,
     ),
     boxShadow: [
       BoxShadow(
-        color: const Color.fromARGB(255, 1, 1, 1).withOpacity(0.55),
-        blurRadius: 1,
-        offset: Offset(0, 1),
+        color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+        blurRadius: 20,
+        spreadRadius: 1,
+        offset: const Offset(0, 4),
+      ),
+      BoxShadow(
+        color: Colors.white.withOpacity(isDarkMode ? 0.05 : 0.1),
+        blurRadius: 10,
+        spreadRadius: -5,
+        offset: const Offset(0, -2),
       ),
     ],
-  );
-}
-
-Color getIconColor(BuildContext context) {
-  final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
-  return isDarkMode ? Colors.white70 : const Color(0xFF0F3460);
-}
-
-ButtonStyle getPrimaryButtonStyle(BuildContext context) {
-  final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
-  return ElevatedButton.styleFrom(
-    backgroundColor:
-        isDarkMode ? const Color(0xFF4D8AFF) : const Color(0xFF0F3460),
-    foregroundColor: Colors.white,
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
   );
 }

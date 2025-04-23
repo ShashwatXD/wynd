@@ -31,6 +31,7 @@ class WeatherProvider with ChangeNotifier {
 
       upcomingForecasts = tempForecasts;
       errorMessage = null;
+      print('api provider called');
       notifyListeners();
     } catch (e) {
       errorMessage = 'Error fetching weather: $e';

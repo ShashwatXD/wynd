@@ -8,8 +8,8 @@ class ToggleModeButton extends StatelessWidget {
     return IconButton(
       icon:
           Provider.of<ThemeProvider>(context).isDarkMode
-              ? Icon(Icons.light_mode, color: Colors.white)
-              : Icon(Icons.dark_mode),
+              ? Icon(Icons.light_mode, color: Colors.white, size: 30)
+              : Icon(Icons.dark_mode, size: 30),
       onPressed: () {
         Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
       },

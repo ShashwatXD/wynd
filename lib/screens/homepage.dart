@@ -1,10 +1,12 @@
+import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:wynd/theme/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:wynd/widgets/loading.dart';
 import 'package:wynd/widgets/error_screen.dart';
+import 'package:wynd/widgets/skeletonizer.dart';
 import 'package:wynd/widgets/weather_icon.dart';
+import 'package:wynd/providers/theme_provider.dart';
 import 'package:wynd/widgets/toggle_mode_button.dart';
 import 'package:wynd/providers/weather_api_provider.dart';
 
@@ -18,20 +20,21 @@ class WeatherScreen extends StatelessWidget {
           if (weatherProvider.weather == null &&
               weatherProvider.errorMessage == null) {
             weatherProvider.fetchWeather();
-            return LoadingScreen();
+            return buildSkeletonLoading(context);
           }
 
           if (weatherProvider.errorMessage != null) {
             return ErrorScreen(
               errorMessage: weatherProvider.errorMessage!,
-              onRetry: () {
-                weatherProvider.fetchWeather();
-              },
+              onRetry: () => weatherProvider.fetchWeather(),
             );
           }
 
-          final weather = weatherProvider.weather!;
-          return _buildMainUI(context, weather, weatherProvider);
+          return _buildMainUI(
+            context,
+            weatherProvider.weather!,
+            weatherProvider,
+          );
         },
       ),
     );
@@ -65,7 +68,7 @@ class WeatherScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Divider(color: Colors.white.withOpacity(0.3), thickness: 0),
+            getDivider(context),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
@@ -90,36 +93,29 @@ class WeatherScreen extends StatelessWidget {
                         style: getHeadingTextStyle(context),
                       ),
                       SizedBox(height: 16),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(
-                            255,
-                            0,
-                            0,
-                            0,
-                          ).withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.calendar_today,
-                              color: const Color.fromARGB(255, 0, 0, 0),
-                              size: 18,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
                             ),
-                            SizedBox(width: 8),
-                            Text(
-                              DateFormat(
-                                'EEEE, MMM d, y',
-                              ).format(DateTime.now()),
-                              style: getBodyTextStyle(context),
+                            decoration: getThemeAwareCardDecoration(context),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(width: 8),
+                                Text(
+                                  DateFormat(
+                                    'EEEE, MMM d, y',
+                                  ).format(DateTime.now()),
+                                  style: getBodyTextStyle(context),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                       SizedBox(height: 10),
@@ -134,24 +130,21 @@ class WeatherScreen extends StatelessWidget {
                                 Icons.air,
                                 "Wind Speed",
                                 "${weather.windSpeed} m/s",
+                                context,
                               ),
-                              Divider(
-                                color: Colors.white.withOpacity(0.3),
-                                height: 30,
-                              ),
+                              getDivider(context),
                               _buildInfoRow(
                                 Icons.wb_sunny,
                                 "Sunrise",
                                 sunriseTime,
+                                context,
                               ),
-                              Divider(
-                                color: Colors.white.withOpacity(0.3),
-                                height: 30,
-                              ),
+                              getDivider(context),
                               _buildInfoRow(
                                 Icons.nightlight_round,
                                 "Sunset",
                                 sunsetTime,
+                                context,
                               ),
                             ],
                           ),
@@ -183,38 +176,8 @@ class WeatherScreen extends StatelessWidget {
 
                                 return Container(
                                   margin: EdgeInsets.only(bottom: 16),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        const Color.fromARGB(
-                                          255,
-                                          9,
-                                          9,
-                                          9,
-                                        ).withOpacity(0.25),
-                                        const Color.fromARGB(
-                                          255,
-                                          0,
-                                          0,
-                                          0,
-                                        ).withOpacity(0.15),
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: const Color.fromARGB(
-                                          255,
-                                          1,
-                                          1,
-                                          1,
-                                        ).withOpacity(0.55),
-                                        blurRadius: 1,
-                                        offset: Offset(0, 1),
-                                      ),
-                                    ],
+                                  decoration: getThemeAwareCardDecoration(
+                                    context,
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -242,19 +205,15 @@ class WeatherScreen extends StatelessWidget {
                                             children: [
                                               Text(
                                                 formattedDate,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
+                                                style: getBodyTextStyle(
+                                                  context,
                                                 ),
                                               ),
                                               SizedBox(height: 4),
                                               Text(
                                                 forecast.weatherMain,
-                                                style: TextStyle(
-                                                  color: Colors.white
-                                                      .withOpacity(0.9),
-                                                  fontSize: 16,
+                                                style: getBodyTextStyle(
+                                                  context,
                                                 ),
                                               ),
                                             ],
@@ -262,11 +221,7 @@ class WeatherScreen extends StatelessWidget {
                                         ),
                                         Text(
                                           '${(forecast.temperature - 273).toStringAsFixed(1)}°C',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                          style: getBodyTextStyle(context),
                                         ),
                                       ],
                                     ),
@@ -289,30 +244,23 @@ class WeatherScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value) {
+  Widget _buildInfoRow(IconData icon, String label, String value, context) {
     return Row(
       children: [
-        Icon(icon, color: Colors.white, size: 30),
+        Icon(
+          icon,
+          color:
+              Provider.of<ThemeProvider>(context).isDarkMode
+                  ? Colors.white70
+                  : Colors.black87,
+        ),
         SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
-                fontSize: 16,
-              ),
-            ),
+            Text(label, style: getBodyTextStyle(context)),
             SizedBox(height: 4),
-            Text(
-              value,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            Text(value, style: getBodyTextStyle(context)),
           ],
         ),
       ],

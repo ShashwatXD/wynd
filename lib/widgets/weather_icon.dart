@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 class GetWeatherIcon extends StatelessWidget {
   final String weatherCondition;
+  double iconSize;
+  GetWeatherIcon({
+    super.key,
+    required this.weatherCondition,
+    required this.iconSize,
+  });
 
-  GetWeatherIcon({super.key, required this.weatherCondition});
-
-  double iconSize = 100;
   IconData iconData = Icons.wb_sunny;
 
   @override

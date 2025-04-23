@@ -16,7 +16,7 @@ class LoadingScreen extends StatelessWidget {
           ],
         ),
       ),
-      child: Center(child: CircularProgressIndicator.adaptive()),
+      child: Center(child: CircularProgressIndicator(color: Colors.black)),
     );
   }
 }

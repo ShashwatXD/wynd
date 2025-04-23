@@ -13,15 +13,16 @@ class WeatherModel {
     required this.sunset,
   });
 
-  factory WeatherModel.fromJson(Map<String, dynamic> json) {
+  factory WeatherModel.fromJson(
+    Map<String, dynamic> current,
+    Map<String, dynamic> city,
+  ) {
     return WeatherModel(
-      weatherMain: json['weather'][0]['main'],
-      temperature: json['main']['temp'],
-      windSpeed: json['wind']['speed'],
-      sunrise: DateTime.fromMillisecondsSinceEpoch(
-        json['sys']['sunrise'] * 1000,
-      ),
-      sunset: DateTime.fromMillisecondsSinceEpoch(json['sys']['sunset'] * 1000),
+      weatherMain: current['weather'][0]['main'],
+      temperature: current['main']['temp'],
+      windSpeed: current['wind']['speed'],
+      sunrise: DateTime.fromMillisecondsSinceEpoch(city['sunrise'] * 1000),
+      sunset: DateTime.fromMillisecondsSinceEpoch(city['sunset'] * 1000),
     );
   }
 }
@@ -36,4 +37,12 @@ class ForecastModel {
     required this.weatherMain,
     required this.temperature,
   });
+
+  factory ForecastModel.fromJson(Map<String, dynamic> item) {
+    return ForecastModel(
+      date: DateTime.parse(item['dt_txt']),
+      weatherMain: item['weather'][0]['main'],
+      temperature: item['main']['temp'],
+    );
+  }
 }

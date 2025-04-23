@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wynd/screens/homepage.dart';
 import 'package:wynd/providers/theme_provider.dart';
+import 'package:wynd/providers/forecast_provider.dart';
 import 'package:wynd/providers/weather_api_provider.dart';
 
 void main() {
@@ -10,6 +11,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => WeatherProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => ForecastProvider()),
       ],
       child: MyApp(),
     ),

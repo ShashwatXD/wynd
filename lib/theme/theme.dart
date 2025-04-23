@@ -20,7 +20,6 @@ BoxDecoration getWeatherBackgroundDecoration(context) {
   return BoxDecoration(
     gradient: getBackgroundGradient(effectiveDarkMode),
     boxShadow: getBackgroundShadows(effectiveDarkMode),
-    borderRadius: BorderRadius.circular(effectiveDarkMode ? 1 : 16),
   );
 }
 
@@ -37,9 +36,9 @@ LinearGradient getBackgroundGradient(bool isDarkMode) {
         end: Alignment.bottomCenter,
         stops: [0.0, 0.6, 1.0],
         colors: [
-          Color.fromARGB(255, 236, 249, 255),
-          Color.fromARGB(255, 164, 224, 251),
-          Color.fromARGB(255, 111, 205, 249),
+          Color.fromARGB(255, 207, 241, 255),
+          Color.fromARGB(255, 123, 182, 209),
+          Color.fromARGB(255, 42, 145, 193),
         ],
       );
 }
@@ -145,12 +144,12 @@ BoxDecoration getThemeAwareCardDecoration(context) {
       colors:
           isDarkMode
               ? [
-                colorScheme.surface.withOpacity(0.2),
-                colorScheme.surface.withOpacity(0.1),
+                colorScheme.surface.withOpacity(0.25),
+                colorScheme.surface.withOpacity(0.05),
               ]
               : [
-                colorScheme.surface.withOpacity(0.3),
-                colorScheme.surface.withOpacity(0.15),
+                colorScheme.surface.withOpacity(0.2),
+                colorScheme.surface.withOpacity(0.05),
               ],
     ),
     border: Border.all(

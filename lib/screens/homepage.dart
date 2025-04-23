@@ -3,11 +3,13 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:wynd/theme/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:wynd/screens/day_detail.dart';
 import 'package:wynd/widgets/error_screen.dart';
 import 'package:wynd/widgets/skeletonizer.dart';
 import 'package:wynd/widgets/weather_icon.dart';
 import 'package:wynd/providers/theme_provider.dart';
 import 'package:wynd/widgets/toggle_mode_button.dart';
+import 'package:wynd/providers/forecast_provider.dart';
 import 'package:wynd/providers/weather_api_provider.dart';
 
 class WeatherScreen extends StatelessWidget {
@@ -45,6 +47,8 @@ class WeatherScreen extends StatelessWidget {
     final sunsetTime = DateFormat('h:mm a').format(weather.sunset.toLocal());
 
     return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
       decoration: getWeatherBackgroundDecoration(context),
       child: SafeArea(
         child: Column(
@@ -161,6 +165,8 @@ class WeatherScreen extends StatelessWidget {
                               style: getHeadingTextStyle(context),
                             ),
                             SizedBox(height: 20),
+
+                            //checkk
                             ListView.builder(
                               shrinkWrap: true,
                               physics: BouncingScrollPhysics(),
@@ -174,56 +180,78 @@ class WeatherScreen extends StatelessWidget {
                                   'EEE, MMM d',
                                 ).format(forecast.date);
 
-                                return Container(
-                                  margin: EdgeInsets.only(bottom: 16),
-                                  decoration: getThemeAwareCardDecoration(
-                                    context,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical: 12.0,
+                                return InkWell(
+                                  onTap: () {
+                                    context
+                                        .read<ForecastProvider>()
+                                        .setForecastData(
+                                          weatherProvider.upcomingForecasts,
+                                          index + 1,
+                                        );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ForecastDetailsScreen(),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(bottom: 16),
+                                    decoration: getThemeAwareCardDecoration(
+                                      context,
                                     ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 60,
-                                          height: 60,
-                                          child: Center(
-                                            child: GetWeatherIcon(
-                                              weatherCondition:
-                                                  forecast.weatherMain,
-                                              iconSize: 35,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0,
+                                        vertical: 12.0,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Hero(
+                                            tag: 'first${forecast.date}',
+                                            child: Container(
+                                              width: 60,
+                                              height: 60,
+                                              child: Center(
+                                                child: GetWeatherIcon(
+                                                  weatherCondition:
+                                                      forecast.weatherMain,
+                                                  iconSize: 35,
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                formattedDate,
-                                                style: getBodyTextStyle(
-                                                  context,
+                                          SizedBox(width: 16),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Hero(
+                                                  tag: 'second${formattedDate}',
+                                                  child: Text(
+                                                    formattedDate,
+                                                    style: getBodyTextStyle(
+                                                      context,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(height: 4),
-                                              Text(
-                                                forecast.weatherMain,
-                                                style: getBodyTextStyle(
-                                                  context,
+                                                SizedBox(height: 4),
+                                                Hero(
+                                                  tag:
+                                                      'third${forecast.date.millisecondsSinceEpoch}',
+                                                  child: Text(
+                                                    forecast.weatherMain,
+                                                    style: getBodyTextStyle(
+                                                      context,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          '${(forecast.temperature - 273).toStringAsFixed(1)}°C',
-                                          style: getBodyTextStyle(context),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );

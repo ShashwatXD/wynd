@@ -26,7 +26,7 @@ class WeatherProvider with ChangeNotifier {
           tempForecasts.add(ForecastModel.fromJson(item));
         }
 
-        if (tempForecasts.length == 4) break;
+        if (tempForecasts.length == 5) break;
       }
 
       upcomingForecasts = tempForecasts;

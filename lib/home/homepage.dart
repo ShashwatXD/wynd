@@ -1,16 +1,18 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:wynd/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:wynd/widgets/loading.dart';
 import 'package:wynd/widgets/error_screen.dart';
 import 'package:wynd/widgets/weather_icon.dart';
-import 'package:wynd/widgets/background_image.dart';
+import 'package:wynd/widgets/toggle_mode_button.dart';
 import 'package:wynd/providers/weather_api_provider.dart';
 
 class WeatherScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Consumer<WeatherProvider>(
         builder: (context, weatherProvider, child) {
           if (weatherProvider.weather == null &&
@@ -40,48 +42,26 @@ class WeatherScreen extends StatelessWidget {
     final sunsetTime = DateFormat('h:mm a').format(weather.sunset.toLocal());
 
     return Container(
-      decoration: getWeatherBackgroundDecoration(weather.weatherMain),
-
+      decoration: getWeatherBackgroundDecoration(context),
       child: SafeArea(
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(Icons.location_on, size: 40, color: Colors.white),
-                  SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "New Delhi",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1.1,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 2.0,
-                              color: Colors.black.withOpacity(0.3),
-                              offset: Offset(1.0, 1.0),
-                            ),
-                          ],
-                        ),
-                      ),
+                      Text("New Delhi", style: getHeadingTextStyle(context)),
                       SizedBox(height: 4),
-                      Text(
-                        "India",
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.9),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.8,
-                        ),
-                      ),
+                      Text("India", style: getHeadingTextStyle(context)),
                     ],
                   ),
+
+                  //the toggle button
+                  ToggleModeButton(),
                 ],
               ),
             ),
@@ -102,33 +82,12 @@ class WeatherScreen extends StatelessWidget {
                       SizedBox(height: 16),
                       Text(
                         '${(weather.temperature - 273).toStringAsFixed(1)}°C',
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 4.0,
-                              color: Colors.black.withOpacity(0.3),
-                              offset: Offset(2.0, 2.0),
-                            ),
-                          ],
-                        ),
+                        style: getHeadingTextStyle(context),
                       ),
                       SizedBox(height: 2),
                       Text(
                         weather.weatherMain,
-                        style: TextStyle(
-                          color: const Color.fromARGB(
-                            255,
-                            211,
-                            211,
-                            211,
-                          ).withOpacity(0.9),
-                          fontSize: 26,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1.2,
-                        ),
+                        style: getHeadingTextStyle(context),
                       ),
                       SizedBox(height: 16),
                       Container(
@@ -158,35 +117,15 @@ class WeatherScreen extends StatelessWidget {
                               DateFormat(
                                 'EEEE, MMM d, y',
                               ).format(DateTime.now()),
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 255, 255, 255),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: getBodyTextStyle(context),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: 10),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(
-                            255,
-                            50,
-                            49,
-                            49,
-                          ).withOpacity(0.7),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              blurRadius: 10,
-
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                        ),
+                        decoration: getThemeAwareCardDecoration(context),
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Column(
@@ -218,7 +157,7 @@ class WeatherScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 40),
+                      SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: Column(
@@ -226,28 +165,12 @@ class WeatherScreen extends StatelessWidget {
                           children: [
                             Text(
                               'Upcoming Forecast',
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 144, 144, 144),
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                shadows: [
-                                  Shadow(
-                                    blurRadius: 2.0,
-                                    color: const Color.fromARGB(
-                                      255,
-                                      72,
-                                      70,
-                                      70,
-                                    ).withOpacity(0.3),
-                                    offset: Offset(1.0, 1.0),
-                                  ),
-                                ],
-                              ),
+                              style: getHeadingTextStyle(context),
                             ),
                             SizedBox(height: 20),
                             ListView.builder(
                               shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: BouncingScrollPhysics(),
                               itemCount:
                                   weatherProvider.upcomingForecasts.length - 1,
                               itemBuilder: (context, index) {

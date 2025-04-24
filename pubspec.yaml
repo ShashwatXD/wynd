@@ -40,6 +40,7 @@ dependencies:
   shared_preferences: ^2.5.3
   skeletonizer: ^1.4.3
   flutter_launcher_icons:
+  circular_reveal_animation:
 
 flutter_icons:
   android: true

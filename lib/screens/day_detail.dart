@@ -17,7 +17,7 @@ class ForecastDetailsScreen extends StatelessWidget {
 
     final pageController = PageController(
       initialPage: initialIndex,
-      viewportFraction: 1,
+      viewportFraction: .82,
     );
 
     return Scaffold(

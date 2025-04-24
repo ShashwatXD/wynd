@@ -7,9 +7,9 @@ class WeatherProvider with ChangeNotifier {
   List<ForecastModel> upcomingForecasts = [];
   String? errorMessage;
 
-  Future<void> fetchWeather() async {
+  Future<void> fetchWeather(String cityName) async {
     try {
-      final data = await ApiCall().getCurrentWeather();
+      final data = await ApiCall().getCurrentWeather(cityName);
 
       weather = WeatherModel.fromJson(data['list'][0], data['city']);
 

@@ -3,8 +3,7 @@ import 'package:wynd/api/apikey.dart';
 import 'package:http/http.dart' as http;
 
 class ApiCall {
-  final cityName = 'Delhi';
-  Future<Map<String, dynamic>> getCurrentWeather() async {
+  Future<Map<String, dynamic>> getCurrentWeather(String cityName) async {
     try {
       final res = await http.get(
         Uri.parse(

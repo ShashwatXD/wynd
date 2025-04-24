@@ -41,6 +41,7 @@ dependencies:
   skeletonizer: ^1.4.3
   flutter_launcher_icons:
   circular_reveal_animation:
+  flutter_card_swiper: ^7.0.2
 
 flutter_icons:
   android: true

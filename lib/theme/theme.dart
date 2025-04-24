@@ -10,7 +10,7 @@ Divider getDivider(context) {
             ? Colors.white.withOpacity(0.3)
             : Colors.black.withOpacity(0.3),
     thickness: 1,
-    height: 30,
+    height: 24,
   );
 }
 

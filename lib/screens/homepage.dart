@@ -8,8 +8,10 @@ import 'package:wynd/screens/day_detail.dart';
 import 'package:wynd/widgets/error_screen.dart';
 import 'package:wynd/widgets/skeletonizer.dart';
 import 'package:wynd/widgets/weather_icon.dart';
+import 'package:wynd/widgets/city_dropdown.dart';
 import 'package:wynd/providers/theme_provider.dart';
 import 'package:wynd/widgets/toggle_mode_button.dart';
+import 'package:wynd/providers/location_provider.dart';
 import 'package:wynd/providers/forecast_provider.dart';
 import 'package:wynd/providers/weather_api_provider.dart';
 
@@ -22,14 +24,14 @@ class WeatherScreen extends StatelessWidget {
         builder: (context, weatherProvider, child) {
           if (weatherProvider.weather == null &&
               weatherProvider.errorMessage == null) {
-            weatherProvider.fetchWeather();
+            weatherProvider.fetchWeather('delhi');
             return buildSkeletonLoading(context);
           }
 
           if (weatherProvider.errorMessage != null) {
             return ErrorScreen(
               errorMessage: weatherProvider.errorMessage!,
-              onRetry: () => weatherProvider.fetchWeather(),
+              onRetry: () => weatherProvider.fetchWeather('delhi'),
             );
           }
 
@@ -48,6 +50,7 @@ class WeatherScreen extends StatelessWidget {
     final sunsetTime = DateFormat('h:mm a').format(weather.sunset.toLocal());
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final locationProvider = Provider.of<LocationProvider>(context);
     //to be implemetned throughout
 
     return AnimatedContainer(
@@ -61,7 +64,7 @@ class WeatherScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: screenWidth * 0.05,
-                vertical: screenHeight * 0.05,
+                vertical: screenHeight * 0.009,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,12 +72,20 @@ class WeatherScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        ApiCall().cityName,
-                        style: getHeadingTextStyle(context),
+                      GestureDetector(
+                        onTap: () {
+                          showCityDropdown(context);
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              locationProvider.currentCity,
+                              style: getHeadingTextStyle(context),
+                            ),
+                            Icon(Icons.arrow_drop_down, size: screenWidth * .1),
+                          ],
+                        ),
                       ),
-                      SizedBox(height: 4),
-                      Text("India", style: getHeadingTextStyle(context)),
                     ],
                   ),
 
@@ -149,21 +160,21 @@ class WeatherScreen extends StatelessWidget {
                               padding: const EdgeInsets.all(20.0),
                               child: Column(
                                 children: [
-                                  _buildInfoRow(
+                                  buildInfoRow(
                                     Icons.air,
                                     "Wind Speed",
                                     "${weather.windSpeed} m/s",
                                     context,
                                   ),
                                   getDivider(context),
-                                  _buildInfoRow(
+                                  buildInfoRow(
                                     Icons.wb_sunny,
                                     "Sunrise",
                                     sunriseTime,
                                     context,
                                   ),
                                   getDivider(context),
-                                  _buildInfoRow(
+                                  buildInfoRow(
                                     Icons.nightlight_round,
                                     "Sunset",
                                     sunsetTime,
@@ -228,7 +239,7 @@ class WeatherScreen extends StatelessWidget {
                                               context,
                                               PageRouteBuilder(
                                                 transitionDuration: Duration(
-                                                  milliseconds: 850,
+                                                  milliseconds: 750,
                                                 ),
                                                 pageBuilder:
                                                     (_, __, ___) =>
@@ -310,7 +321,6 @@ class WeatherScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(height: 30),
                         ],
                       ),
                     );
@@ -324,7 +334,7 @@ class WeatherScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value, context) {
+  Widget buildInfoRow(IconData icon, String label, String value, context) {
     return Row(
       children: [
         Icon(

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:wynd/theme/theme.dart';
+import 'package:wynd/api/api_call.dart';
 import 'package:provider/provider.dart';
 import 'package:wynd/screens/day_detail.dart';
 import 'package:wynd/widgets/error_screen.dart';
@@ -61,7 +62,7 @@ class WeatherScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("New Delhi", style: getHeadingTextStyle(context)),
+                      Text( ApiCall().cityName,style: getHeadingTextStyle(context)),
                       SizedBox(height: 4),
                       Text("India", style: getHeadingTextStyle(context)),
                     ],
@@ -98,7 +99,7 @@ class WeatherScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 16),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(15),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
                           child: Container(
@@ -190,8 +191,13 @@ class WeatherScreen extends StatelessWidget {
                                         );
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(
-                                        builder: (_) => ForecastDetailsScreen(),
+                                      PageRouteBuilder(
+                                        transitionDuration: Duration(
+                                          milliseconds: 850,
+                                        ),
+                                        pageBuilder:
+                                            (_, __, ___) =>
+                                                ForecastDetailsScreen(),
                                       ),
                                     );
                                   },
@@ -249,6 +255,10 @@ class WeatherScreen extends StatelessWidget {
                                                 ),
                                               ],
                                             ),
+                                          ),
+                                          Text(
+                                            '${(forecast.temperature - 273).toStringAsFixed(1)}°C',
+                                            style: getBodyTextStyle(context),
                                           ),
                                         ],
                                       ),

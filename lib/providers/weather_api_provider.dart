@@ -28,12 +28,15 @@ class WeatherProvider with ChangeNotifier {
 
         if (tempForecasts.length == 5) break;
       }
+      print('api provider called');
 
       upcomingForecasts = tempForecasts;
       errorMessage = null;
-      print('api provider called');
       notifyListeners();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('STACK TRACE: $stackTrace');
+      errorMessage = 'Error fetching weather: $e';
+      print(e);
       errorMessage = 'Error fetching weather: $e';
       notifyListeners();
     }

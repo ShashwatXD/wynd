@@ -50,7 +50,8 @@ class WeatherScreen extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     //to be implemetned throughout
 
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(seconds: 1),
       width: screenWidth,
       height: screenHeight,
       decoration: getWeatherBackgroundDecoration(context),
@@ -207,10 +208,12 @@ class WeatherScreen extends StatelessWidget {
                                         'EEE, MMM d',
                                       ).format(forecast.date);
 
+                                      //work here
+
                                       return Padding(
                                         padding: EdgeInsets.symmetric(
-                                          horizontal: 8.0,
-                                          vertical: 16.0,
+                                          horizontal: screenHeight * .012,
+                                          vertical: screenWidth * .010,
                                         ),
                                         child: InkWell(
                                           onTap: () {

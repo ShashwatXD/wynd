@@ -15,52 +15,24 @@ Divider getDivider(context) {
 }
 
 BoxDecoration getWeatherBackgroundDecoration(context) {
-  final effectiveDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+  final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
 
   return BoxDecoration(
-    gradient: getBackgroundGradient(effectiveDarkMode),
-    boxShadow: getBackgroundShadows(effectiveDarkMode),
+    gradient: LinearGradient(
+      colors:
+          isDarkMode
+              ? [
+                const Color.fromARGB(255, 32, 66, 93),
+                const Color.fromARGB(255, 24, 52, 67),
+              ]
+              : [
+                const Color.fromARGB(255, 195, 227, 254),
+                Colors.lightBlueAccent,
+              ],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
   );
-}
-
-LinearGradient getBackgroundGradient(bool isDarkMode) {
-  return isDarkMode
-      ? const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        stops: [0.1, 0.5, 0.9],
-        colors: [Color(0xFF1A1A2E), Color(0xFF16213E), Color(0xFF0F3460)],
-      )
-      : const LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: [0.0, 0.6, 1.0],
-        colors: [
-          Color.fromARGB(255, 207, 241, 255),
-          Color.fromARGB(255, 123, 182, 209),
-          Color.fromARGB(255, 42, 145, 193),
-        ],
-      );
-}
-
-List<BoxShadow>? getBackgroundShadows(bool isDarkMode) {
-  return isDarkMode
-      ? [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.4),
-          blurRadius: 10,
-          spreadRadius: 2,
-          offset: const Offset(0, 4),
-        ),
-      ]
-      : [
-        BoxShadow(
-          color: Colors.blueGrey.withOpacity(0.1),
-          blurRadius: 8,
-          spreadRadius: 1,
-          offset: const Offset(0, 2),
-        ),
-      ];
 }
 
 TextStyle getHeadingTextStyle(context) {
@@ -124,7 +96,7 @@ BoxDecoration getCardDecoration(context) {
             isDarkMode
                 ? Colors.black.withOpacity(0.3)
                 : Colors.grey.withOpacity(0.2),
-        spreadRadius: 1,
+        spreadRadius: 100,
         blurRadius: 5,
         offset: const Offset(0, 2),
       ),

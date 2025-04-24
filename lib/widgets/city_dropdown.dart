@@ -24,6 +24,8 @@ void showCityDropdown(BuildContext context) {
               onTap: () async {
                 locationProvider.currentCity = city;
                 Navigator.pop(context);
+                await locationProvider.changeCity(city);
+
                 await weatherProvider.fetchWeather(city);
               },
             );

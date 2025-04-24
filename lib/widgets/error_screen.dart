@@ -25,7 +25,7 @@ class ErrorScreen extends StatelessWidget {
               Icon(Icons.error_outline, color: Colors.red[300], size: 80),
               SizedBox(height: 16),
               Text(
-                "Oops! Something went wrong",
+                "Oops! Something went wrong , Please Check your internet connection",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 22,

@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:wynd/theme/theme.dart';
-import 'package:wynd/api/api_call.dart';
 import 'package:provider/provider.dart';
 import 'package:wynd/screens/day_detail.dart';
 import 'package:wynd/widgets/error_screen.dart';
@@ -14,12 +13,14 @@ import 'package:wynd/widgets/toggle_mode_button.dart';
 import 'package:wynd/providers/location_provider.dart';
 import 'package:wynd/providers/forecast_provider.dart';
 import 'package:wynd/providers/weather_api_provider.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+
+FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
 class WeatherScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Consumer<WeatherProvider>(
         builder: (context, weatherProvider, child) {
           if (weatherProvider.weather == null &&
@@ -51,6 +52,7 @@ class WeatherScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final locationProvider = Provider.of<LocationProvider>(context);
+
     //to be implemetned throughout
 
     return AnimatedContainer(

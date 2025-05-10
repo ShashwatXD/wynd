@@ -106,7 +106,7 @@ class ForecastDetailsScreen extends StatelessWidget {
 class ForecastCard extends StatelessWidget {
   final ForecastModel forecast;
 
-  const ForecastCard({required this.forecast});
+  const ForecastCard({super.key, required this.forecast});
 
   @override
   Widget build(BuildContext context) {

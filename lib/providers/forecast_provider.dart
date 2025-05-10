@@ -15,6 +15,4 @@ class ForecastProvider with ChangeNotifier {
     currentIndex = index;
     notifyListeners();
   }
-
-  ForecastModel get currentForecast => forecastList[currentIndex];
 }

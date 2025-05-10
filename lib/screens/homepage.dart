@@ -198,7 +198,7 @@ class WeatherScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: 20),
 
-                                //checkk
+                                //checkk n study
                                 Container(
                                   height: screenHeight * .32,
                                   width: screenWidth * 0.82,

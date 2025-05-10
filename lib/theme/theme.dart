@@ -85,25 +85,6 @@ TextStyle getBodyTextStyle(context) {
   );
 }
 
-BoxDecoration getCardDecoration(context) {
-  final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
-  return BoxDecoration(
-    color: isDarkMode ? const Color(0xFF202040) : Colors.white,
-    borderRadius: BorderRadius.circular(12),
-    boxShadow: [
-      BoxShadow(
-        color:
-            isDarkMode
-                ? Colors.black.withOpacity(0.3)
-                : Colors.grey.withOpacity(0.2),
-        spreadRadius: 100,
-        blurRadius: 5,
-        offset: const Offset(0, 2),
-      ),
-    ],
-  );
-}
-
 BoxDecoration getThemeAwareCardDecoration(context) {
   final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
   final colorScheme = Theme.of(context).colorScheme;
